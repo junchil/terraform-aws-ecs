@@ -3,7 +3,12 @@ resource "aws_ecs_service" "bar" {
   cluster         = aws_ecs_cluster.default.id
   task_definition = aws_ecs_task_definition.efs-task.arn
   desired_count   = 2
-  launch_type     = "EC2"
+
+  capacity_provider_strategy {
+    base              = 1
+    capacity_provider = aws_ecs_capacity_provider.asg.name
+    weight            = 1
+  }
 }
 
 resource "aws_ecs_task_definition" "efs-task" {

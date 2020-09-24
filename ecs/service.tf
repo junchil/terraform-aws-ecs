@@ -40,9 +40,16 @@ DEFINITION
 
   volume {
     name = "efs-html"
+
     efs_volume_configuration {
-      file_system_id = aws_efs_file_system.foo.id
-      root_directory = "/path/to/my/data"
+      file_system_id     = aws_efs_file_system.foo.id
+      root_directory     = "/"
+      transit_encryption = "ENABLED"
+
+      authorization_config {
+        access_point_id = aws_efs_access_point.this.id
+        iam           = "DISABLED"
+      }
     }
   }
 }

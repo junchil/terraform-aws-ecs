@@ -11,45 +11,26 @@ resource "aws_ecs_service" "bar" {
   }
 }
 
+data "template_file" "nginx_app" {
+  template = file("./ecs/nginx.json")
+}
+
 resource "aws_ecs_task_definition" "efs-task" {
-  family = "efs-example-task"
+  family                = "efs-example-task"
+  container_definitions = data.template_file.nginx_app.rendered
 
-  container_definitions = <<DEFINITION
-[
-  {
-      "memory": 128,
-      "portMappings": [
-          {
-              "hostPort": 80,
-              "containerPort": 80,
-              "protocol": "tcp"
-          }
-      ],
-      "essential": true,
-      "mountPoints": [
-          {
-              "containerPath": "/usr/share/nginx/html",
-              "sourceVolume": "efs-html"
-          }
-      ],
-      "name": "nginx",
-      "image": "nginx"
-  }
-]
-DEFINITION
+  # volume {
+  #   name = "efs-html"
 
-  volume {
-    name = "efs-html"
+  #   efs_volume_configuration {
+  #     file_system_id     = aws_efs_file_system.foo.id
+  #     root_directory     = "/"
+  #     transit_encryption = "ENABLED"
 
-    efs_volume_configuration {
-      file_system_id     = aws_efs_file_system.foo.id
-      root_directory     = "/"
-      transit_encryption = "ENABLED"
-
-      authorization_config {
-        access_point_id = aws_efs_access_point.this.id
-        iam           = "DISABLED"
-      }
-    }
-  }
+  #     authorization_config {
+  #       access_point_id = aws_efs_access_point.this.id
+  #       iam             = "DISABLED"
+  #     }
+  #   }
+  # }
 }

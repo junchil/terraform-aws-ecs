@@ -54,3 +54,14 @@ resource "aws_eip" "ip" {
   }
 }
 
+resource "aws_route53_record" "jumpbox" {
+  zone_id = aws_route53_zone.main.zone_id
+  name    = "jumpbox"
+  type    = "A"
+  ttl     = "300"
+  records = [aws_instance.kubernetes-server.public_ip]
+}
+
+resource "aws_route53_zone" "main" {
+  name = "stevejcliu.com"
+}

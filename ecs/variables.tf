@@ -34,7 +34,7 @@ variable "instance_types" {
 }
 
 variable "ami_id" {
-  default = "ami-08fdde86b93accf1c"
+  default = "ami-05d4d52c00993475d"
 }
 
 variable "security_group_ids" {

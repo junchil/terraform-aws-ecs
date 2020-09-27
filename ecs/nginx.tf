@@ -2,13 +2,21 @@ resource "aws_ecs_service" "bar" {
   name            = "efs-example-service"
   cluster         = aws_ecs_cluster.default.id
   task_definition = aws_ecs_task_definition.efs-task.arn
-  desired_count   = 2
+  desired_count   = 1
 
   capacity_provider_strategy {
     base              = 1
     capacity_provider = aws_ecs_capacity_provider.asg.name
     weight            = 1
   }
+
+  load_balancer {
+    target_group_arn = aws_alb_target_group.nginx_app.id
+    container_name   = var.nginx_app_name
+    container_port   = var.nginx_app_port
+  }
+
+  depends_on = [aws_alb_listener.front_end]
 }
 
 data "template_file" "nginx_app" {

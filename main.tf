@@ -16,24 +16,13 @@ module "vpc" {
   private_subnet_cidr = ["10.0.228.0/22", "10.0.232.0/22", "10.0.236.0/22"]
 }
 
-module "ecs" {
-  source              = "./ecs"
+module "cluster" {
+  source              = "./cluster"
   vpc_id              = module.vpc.vpc_id
   cluster_name        = var.cluster_name
   subnet_ids          = flatten([module.vpc.private_subnet])
-  trusted_cidr_blocks = ["10.0.204.0/22", "10.0.208.0/22", "10.0.212.0/22"]
+  trusted_cidr_blocks = flatten([module.vpc.public_subnet])
   tags = {
     Stack = "Dev"
   }
-}
-
-module "jumpbox" {
-  source                  = "./jumpbox"
-  instance_type           = var.instance_type
-  instance_ami            = var.instance_ami
-  server-name             = var.jumpbox_name
-  aws_key_pair_name       = var.aws_key_pair_name
-  aws_key_pair_public_key = var.aws_key_pair_public_key
-  vpc_id                  = module.vpc.vpc_id
-  k8-subnet               = module.vpc.public_subnet[0]
 }

@@ -1,3 +1,12 @@
+resource "aws_alb" "nginx-alb" {
+  name            = "nginx-load-balancer"
+  subnets         = var.subnet_ids
+  security_groups = [aws_security_group.aws-lb.id]
+  tags = {
+    Name = "nginx-app-alb"
+  }
+}
+
 resource "aws_security_group" "aws-lb" {
   name        = "nginx-load-balancer-sg"
   description = "Controls access to the ALB"
@@ -29,15 +38,6 @@ resource "aws_security_group" "aws-lb" {
   }
 }
 
-resource "aws_alb" "main" {
-  name            = "nginx-load-balancer"
-  subnets         = var.subnet_ids
-  security_groups = [aws_security_group.aws-lb.id]
-  tags = {
-    Name = "nginx-app-alb"
-  }
-}
-
 resource "aws_alb_target_group" "nginx_app" {
   name        = "nginx-target-group"
   port        = 80
@@ -61,7 +61,7 @@ resource "aws_alb_target_group" "nginx_app" {
 
 # Redirect all traffic from the ALB to the target group
 resource "aws_alb_listener" "alb-https-listener" {
-  load_balancer_arn = aws_alb.main.id
+  load_balancer_arn = aws_alb.nginx-alb.id
   port              = 443
   protocol          = "HTTPS"
 
@@ -74,7 +74,7 @@ resource "aws_alb_listener" "alb-https-listener" {
 }
 
 resource "aws_lb_listener" "alb-http-listener" {
-  load_balancer_arn = aws_alb.main.id
+  load_balancer_arn = aws_alb.nginx-alb.id
   port              = 80
   protocol          = "HTTP"
 
@@ -100,8 +100,8 @@ resource "aws_route53_record" "nginx-alb-record" {
   type    = "A"
 
   alias {
-    name                   = aws_alb.main.dns_name
-    zone_id                = aws_alb.main.zone_id
+    name                   = aws_alb.nginx-alb.dns_name
+    zone_id                = aws_alb.nginx-alb.zone_id
     evaluate_target_health = true
   }
 }

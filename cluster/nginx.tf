@@ -1,5 +1,5 @@
 resource "aws_ecs_service" "bar" {
-  name            = "efs-example-service"
+  name            = "nginx-service"
   cluster         = aws_ecs_cluster.ecs-cluster.id
   task_definition = aws_ecs_task_definition.efs-task.arn
   desired_count   = 1
@@ -12,8 +12,12 @@ resource "aws_ecs_service" "bar" {
 
   load_balancer {
     target_group_arn = aws_alb_target_group.nginx_app.id
-    container_name   = "nginx-container"
+    container_name   = "nginx"
     container_port   = 80
+  }
+
+  network_configuration {
+    subnets = var.subnet_ids
   }
 
   depends_on = [aws_alb_listener.front_end]
@@ -24,8 +28,9 @@ data "template_file" "nginx_app" {
 }
 
 resource "aws_ecs_task_definition" "efs-task" {
-  family                = "efs-example-task"
+  family                = "nginx-task"
   container_definitions = data.template_file.nginx_app.rendered
+  network_mode = "awsvpc"
 
   # volume {
   #   name = "efs-html"

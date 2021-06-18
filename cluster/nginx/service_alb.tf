@@ -53,10 +53,12 @@ resource "aws_alb_target_group" "nginx_app" {
 }
 
 # Redirect all traffic from the ALB to the target group
-resource "aws_alb_listener" "front_end" {
+resource "aws_alb_listener" "alb-https-listener" {
   load_balancer_arn = aws_alb.main.id
-  port              = 80
-  protocol          = "HTTP"
+  port              = 443
+  protocol          = "HTTPS"
+
+  certificate_arn = aws_acm_certificate.cert.arn
 
   default_action {
     target_group_arn = aws_alb_target_group.nginx_app.id

@@ -1,4 +1,4 @@
-resource "aws_ecs_service" "bar" {
+resource "aws_ecs_service" "nginx-service" {
   name            = "nginx-service"
   cluster         = aws_ecs_cluster.ecs-cluster.id
   task_definition = aws_ecs_task_definition.efs-task.arn
@@ -24,7 +24,7 @@ resource "aws_ecs_service" "bar" {
 }
 
 data "template_file" "nginx_app" {
-  template = file("./cluster/nginx.json")
+  template = file("./cluster/nginx/nginx.json")
 }
 
 resource "aws_ecs_task_definition" "efs-task" {

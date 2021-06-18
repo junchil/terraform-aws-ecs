@@ -14,11 +14,6 @@ variable "subnet_ids" {
   description = ""
 }
 
-variable "protect_from_scale_in" {
-  description = "The autoscaling group will not select instances with this setting for termination during scale in events."
-  default     = true
-}
-
 variable "spot" {
   description = "Choose should we use spot instances or on-demand to poulate ECS cluster."
   type        = bool
@@ -46,11 +41,6 @@ variable "trusted_cidr_blocks" {
   description = "Trusted subnets e.g. with ALB and bastion host."
   type        = list(string)
   default     = [""]
-}
-
-variable "target_capacity" {
-  description = "The target utilization for the cluster. A number between 1 and 100."
-  default     = "10"
 }
 
 variable "aws_key_pair_name" {

@@ -8,6 +8,6 @@ locals {
 }
 
 data "external" "git_release" {
-  working_dir = "${path.module}"
+  working_dir = path.module
   program     = ["bash", "scripts/get-branch.sh"]
 }

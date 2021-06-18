@@ -15,8 +15,8 @@ resource "aws_ecs_capacity_provider" "the-capacity-provider" {
 }
 
 resource "aws_ecs_cluster" "ecs-cluster" {
-  name               = var.cluster_name
-  tags               = local.tags
+  name = var.cluster_name
+  tags = local.tags
 
   capacity_providers = [aws_ecs_capacity_provider.the-capacity-provider.name]
   default_capacity_provider_strategy {

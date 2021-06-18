@@ -30,7 +30,7 @@ data "template_file" "nginx_app" {
 resource "aws_ecs_task_definition" "efs-task" {
   family                = "nginx-task"
   container_definitions = data.template_file.nginx_app.rendered
-  network_mode = "awsvpc"
+  network_mode          = "awsvpc"
 
   # volume {
   #   name = "efs-html"

@@ -7,7 +7,7 @@ resource "aws_security_group" "ecs_nodes" {
 resource "aws_security_group_rule" "ingress" {
   from_port         = 80
   to_port           = 80
-  protocol         = "tcp"
+  protocol          = "tcp"
   cidr_blocks       = var.trusted_cidr_blocks
   security_group_id = aws_security_group.ecs_nodes.id
   type              = "ingress"

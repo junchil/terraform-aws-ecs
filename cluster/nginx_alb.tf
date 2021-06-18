@@ -23,7 +23,7 @@ resource "aws_security_group" "aws-lb" {
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
-  
+
   tags = {
     Name = "nginx-load-balancer"
   }
@@ -90,8 +90,8 @@ resource "aws_lb_listener" "alb-http-listener" {
 }
 
 data "aws_route53_zone" "hosted-zone" {
-    name = "stevejcliu.com"
-    private_zone = false
+  name         = "stevejcliu.com"
+  private_zone = false
 }
 
 resource "aws_route53_record" "nginx-alb-record" {
@@ -100,8 +100,8 @@ resource "aws_route53_record" "nginx-alb-record" {
   type    = "A"
 
   alias {
-    name                   = "${aws_alb.main.dns_name}"
-    zone_id                = "${aws_alb.main.zone_id}"
+    name                   = aws_alb.main.dns_name
+    zone_id                = aws_alb.main.zone_id
     evaluate_target_health = true
   }
 }

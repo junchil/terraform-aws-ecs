@@ -1,13 +1,13 @@
 resource "aws_alb" "nginx-alb" {
   name            = "nginx-load-balancer"
   subnets         = var.subnet_ids
-  security_groups = [aws_security_group.aws-lb.id]
+  security_groups = [aws_security_group.aws-nginx-alb.id]
   tags = {
     Name = "nginx-app-alb"
   }
 }
 
-resource "aws_security_group" "aws-lb" {
+resource "aws_security_group" "aws-nginx-alb" {
   name        = "nginx-load-balancer-sg"
   description = "Controls access to the ALB"
   vpc_id      = var.vpc_id

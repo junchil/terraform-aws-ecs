@@ -5,6 +5,13 @@ resource "aws_security_group" "aws-lb" {
 
   ingress {
     protocol    = "tcp"
+    from_port   = 443
+    to_port     = 443
+    cidr_blocks = ["10.0.228.0/22", "10.0.232.0/22", "10.0.236.0/22"]
+  }
+
+  ingress {
+    protocol    = "tcp"
     from_port   = 80
     to_port     = 80
     cidr_blocks = ["10.0.228.0/22", "10.0.232.0/22", "10.0.236.0/22"]
@@ -63,6 +70,22 @@ resource "aws_alb_listener" "alb-https-listener" {
   default_action {
     target_group_arn = aws_alb_target_group.nginx_app.id
     type             = "forward"
+  }
+}
+
+resource "aws_lb_listener" "alb-http-listener" {
+  load_balancer_arn = aws_alb.main.id
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 

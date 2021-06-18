@@ -20,11 +20,11 @@ resource "aws_ecs_service" "nginx-service" {
     subnets = var.subnet_ids
   }
 
-  depends_on = [aws_alb_listener.front_end]
+  depends_on = [aws_alb_listener.alb-https-listener]
 }
 
 data "template_file" "nginx_app" {
-  template = file("./cluster/nginx/nginx.json")
+  template = file("./cluster/nginx.json")
 }
 
 resource "aws_ecs_task_definition" "efs-task" {

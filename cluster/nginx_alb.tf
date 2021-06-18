@@ -7,14 +7,14 @@ resource "aws_security_group" "aws-lb" {
     protocol    = "tcp"
     from_port   = 443
     to_port     = 443
-    cidr_blocks = ["10.0.228.0/22", "10.0.232.0/22", "10.0.236.0/22"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
     protocol    = "tcp"
     from_port   = 80
     to_port     = 80
-    cidr_blocks = ["10.0.228.0/22", "10.0.232.0/22", "10.0.236.0/22"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
@@ -46,13 +46,13 @@ resource "aws_alb_target_group" "nginx_app" {
   target_type = "ip"
 
   health_check {
-    healthy_threshold   = "3"
-    interval            = "30"
+    healthy_threshold   = "2"
+    interval            = "60"
     protocol            = "HTTP"
     matcher             = "200"
-    timeout             = "3"
+    timeout             = "5"
     path                = "/"
-    unhealthy_threshold = "2"
+    unhealthy_threshold = "3"
   }
   tags = {
     Name = "nginx-alb-target-group"

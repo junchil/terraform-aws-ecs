@@ -1,7 +1,7 @@
 resource "aws_ecs_service" "golang-service" {
   name            = "golang-service"
   cluster         = aws_ecs_cluster.ecs-cluster.id
-  task_definition = aws_ecs_task_definition.efs-task.arn
+  task_definition = aws_ecs_task_definition.golang-task.arn
   desired_count   = 1
 
   capacity_provider_strategy {
@@ -26,7 +26,7 @@ data "template_file" "golang_app" {
   template = file("./cluster/golang.json")
 }
 
-resource "aws_ecs_task_definition" "efs-task" {
+resource "aws_ecs_task_definition" "golang-task" {
   family                = "golang-task"
   container_definitions = data.template_file.golang_app.rendered
   network_mode          = "awsvpc"
@@ -56,15 +56,6 @@ resource "aws_security_group" "golang_sg" {
 resource "aws_security_group_rule" "golang_sg_http_ingress" {
   from_port         = 3000
   to_port           = 3000
-  protocol          = "tcp"
-  cidr_blocks       = var.trusted_cidr_blocks
-  security_group_id = aws_security_group.golang_sg.id
-  type              = "ingress"
-}
-
-resource "aws_security_group_rule" "golang_sg_https_ingress" {
-  from_port         = 443
-  to_port           = 443
   protocol          = "tcp"
   cidr_blocks       = var.trusted_cidr_blocks
   security_group_id = aws_security_group.golang_sg.id

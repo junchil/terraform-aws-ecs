@@ -10,7 +10,7 @@ variable "tags" {
   type        = map(string)
 }
 
-variable "subnet_ids" {
+variable "private_subnet" {
   description = ""
 }
 

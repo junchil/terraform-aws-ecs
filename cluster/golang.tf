@@ -17,7 +17,7 @@ resource "aws_ecs_service" "golang-service" {
   }
 
   network_configuration {
-    subnets         = var.subnet_ids
+    subnets         = var.private_subnet
     security_groups = [aws_security_group.golang_sg.id]
   }
 }

@@ -2,7 +2,7 @@ resource "aws_autoscaling_group" "ecs_nodes" {
   name                  = "${var.cluster_name}-asg"
   max_size              = 2
   min_size              = 1
-  vpc_zone_identifier   = var.subnet_ids
+  vpc_zone_identifier   = var.private_subnet
   protect_from_scale_in = false
 
   mixed_instances_policy {

@@ -10,7 +10,7 @@ module "cluster" {
   source              = "./cluster"
   vpc_id              = module.vpc.vpc_id
   cluster_name        = var.cluster_name
-  subnet_ids          = flatten([module.vpc.private_subnet])
+  private_subnet          = flatten([module.vpc.private_subnet])
   public_subnet       = flatten([module.vpc.public_subnet])
   trusted_cidr_blocks = ["10.0.204.0/22", "10.0.208.0/22", "10.0.212.0/22"]
   tags = {

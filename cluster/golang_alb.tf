@@ -96,7 +96,7 @@ data "aws_route53_zone" "hosted-zone" {
 
 resource "aws_route53_record" "golang-alb-record" {
   zone_id = data.aws_route53_zone.hosted-zone.zone_id
-  name    = "stevejcliu.com"
+  name    = "web.stevejcliu.com"
   type    = "A"
 
   alias {

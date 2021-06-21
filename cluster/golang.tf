@@ -1,5 +1,5 @@
-resource "aws_ecs_service" "nginx-service" {
-  name            = "nginx-service"
+resource "aws_ecs_service" "golang-service" {
+  name            = "golang-service"
   cluster         = aws_ecs_cluster.ecs-cluster.id
   task_definition = aws_ecs_task_definition.efs-task.arn
   desired_count   = 1
@@ -11,24 +11,24 @@ resource "aws_ecs_service" "nginx-service" {
   }
 
   load_balancer {
-    target_group_arn = aws_alb_target_group.nginx_app.id
-    container_name   = "nginx"
+    target_group_arn = aws_alb_target_group.golang_app.id
+    container_name   = "golang"
     container_port   = 3000
   }
 
   network_configuration {
     subnets = var.subnet_ids
-    security_groups = [aws_security_group.nginx_sg.id]
+    security_groups = [aws_security_group.golang_sg.id]
   }
 }
 
-data "template_file" "nginx_app" {
-  template = file("./cluster/nginx.json")
+data "template_file" "golang_app" {
+  template = file("./cluster/golang.json")
 }
 
 resource "aws_ecs_task_definition" "efs-task" {
-  family                = "nginx-task"
-  container_definitions = data.template_file.nginx_app.rendered
+  family                = "golang-task"
+  container_definitions = data.template_file.golang_app.rendered
   network_mode          = "awsvpc"
 
   # volume {
@@ -47,35 +47,35 @@ resource "aws_ecs_task_definition" "efs-task" {
   # }
 }
 
-resource "aws_security_group" "nginx_sg" {
-  name   = "Nginx service sg"
+resource "aws_security_group" "golang_sg" {
+  name   = "golang service sg"
   vpc_id = var.vpc_id
   tags   = local.tags
 }
 
-resource "aws_security_group_rule" "nginx_sg_http_ingress" {
+resource "aws_security_group_rule" "golang_sg_http_ingress" {
   from_port         = 3000
   to_port           = 3000
   protocol          = "tcp"
   cidr_blocks       = var.trusted_cidr_blocks
-  security_group_id = aws_security_group.nginx_sg.id
+  security_group_id = aws_security_group.golang_sg.id
   type              = "ingress"
 }
 
-resource "aws_security_group_rule" "nginx_sg_https_ingress" {
+resource "aws_security_group_rule" "golang_sg_https_ingress" {
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
   cidr_blocks       = var.trusted_cidr_blocks
-  security_group_id = aws_security_group.nginx_sg.id
+  security_group_id = aws_security_group.golang_sg.id
   type              = "ingress"
 }
 
-resource "aws_security_group_rule" "nginx_sg_egress" {
+resource "aws_security_group_rule" "golang_sg_egress" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = aws_security_group.nginx_sg.id
+  security_group_id = aws_security_group.golang_sg.id
   type              = "egress"
 }

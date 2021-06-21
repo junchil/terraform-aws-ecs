@@ -1,14 +1,14 @@
-resource "aws_alb" "nginx-alb" {
-  name            = "nginx-load-balancer"
+resource "aws_alb" "golang-alb" {
+  name            = "golang-load-balancer"
   subnets         = var.subnet_ids
-  security_groups = [aws_security_group.aws-nginx-alb.id]
+  security_groups = [aws_security_group.aws-golang-alb.id]
   tags = {
-    Name = "nginx-app-alb"
+    Name = "golang-app-alb"
   }
 }
 
-resource "aws_security_group" "aws-nginx-alb" {
-  name        = "nginx-load-balancer-sg"
+resource "aws_security_group" "aws-golang-alb" {
+  name        = "golang-load-balancer-sg"
   description = "Controls access to the ALB"
   vpc_id      = var.vpc_id
 
@@ -34,12 +34,12 @@ resource "aws_security_group" "aws-nginx-alb" {
   }
 
   tags = {
-    Name = "nginx-load-balancer"
+    Name = "golang-load-balancer"
   }
 }
 
-resource "aws_alb_target_group" "nginx_app" {
-  name        = "nginx-target-group"
+resource "aws_alb_target_group" "golang_app" {
+  name        = "golang-target-group"
   port        = 3000
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
@@ -55,26 +55,26 @@ resource "aws_alb_target_group" "nginx_app" {
     unhealthy_threshold = "3"
   }
   tags = {
-    Name = "nginx-alb-target-group"
+    Name = "golang-alb-target-group"
   }
 }
 
 # Redirect all traffic from the ALB to the target group
 resource "aws_alb_listener" "alb-https-listener" {
-  load_balancer_arn = aws_alb.nginx-alb.id
+  load_balancer_arn = aws_alb.golang-alb.id
   port              = 443
   protocol          = "HTTPS"
 
   certificate_arn = aws_acm_certificate.cert.arn
 
   default_action {
-    target_group_arn = aws_alb_target_group.nginx_app.id
+    target_group_arn = aws_alb_target_group.golang_app.id
     type             = "forward"
   }
 }
 
 resource "aws_lb_listener" "alb-http-listener" {
-  load_balancer_arn = aws_alb.nginx-alb.id
+  load_balancer_arn = aws_alb.golang-alb.id
   port              = 3000
   protocol          = "HTTP"
 
@@ -94,14 +94,14 @@ data "aws_route53_zone" "hosted-zone" {
   private_zone = false
 }
 
-resource "aws_route53_record" "nginx-alb-record" {
+resource "aws_route53_record" "golang-alb-record" {
   zone_id = data.aws_route53_zone.hosted-zone.zone_id
   name    = "stevejcliu.com"
   type    = "A"
 
   alias {
-    name                   = aws_alb.nginx-alb.dns_name
-    zone_id                = aws_alb.nginx-alb.zone_id
+    name                   = aws_alb.golang-alb.dns_name
+    zone_id                = aws_alb.golang-alb.zone_id
     evaluate_target_health = true
   }
 }

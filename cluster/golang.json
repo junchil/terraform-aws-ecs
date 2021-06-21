@@ -9,7 +9,7 @@
             }
         ],
         "essential": true,
-        "name": "nginx",
+        "name": "golang",
         "image": "675617749633.dkr.ecr.ap-southeast-2.amazonaws.com/eks-cluster/golang-app:latest"
     }
 ]

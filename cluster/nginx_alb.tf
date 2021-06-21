@@ -47,7 +47,7 @@ resource "aws_alb_target_group" "nginx_app" {
 
   health_check {
     healthy_threshold   = "2"
-    interval            = "60"
+    interval            = "20"
     protocol            = "HTTP"
     matcher             = "200"
     timeout             = "5"

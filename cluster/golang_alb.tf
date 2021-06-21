@@ -21,8 +21,8 @@ resource "aws_security_group" "aws-nginx-alb" {
 
   ingress {
     protocol    = "tcp"
-    from_port   = 80
-    to_port     = 80
+    from_port   = 3000
+    to_port     = 3000
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -40,7 +40,7 @@ resource "aws_security_group" "aws-nginx-alb" {
 
 resource "aws_alb_target_group" "nginx_app" {
   name        = "nginx-target-group"
-  port        = 80
+  port        = 3000
   protocol    = "HTTP"
   vpc_id      = var.vpc_id
   target_type = "ip"
@@ -75,7 +75,7 @@ resource "aws_alb_listener" "alb-https-listener" {
 
 resource "aws_lb_listener" "alb-http-listener" {
   load_balancer_arn = aws_alb.nginx-alb.id
-  port              = 80
+  port              = 3000
   protocol          = "HTTP"
 
   default_action {

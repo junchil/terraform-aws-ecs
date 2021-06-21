@@ -3,13 +3,13 @@
         "memory": 128,
         "portMappings": [
             {
-                "hostPort": 80,
-                "containerPort": 80,
+                "hostPort": 3000,
+                "containerPort": 3000,
                 "protocol": "tcp"
             }
         ],
         "essential": true,
         "name": "nginx",
-        "image": "nginx"
+        "image": "675617749633.dkr.ecr.ap-southeast-2.amazonaws.com/eks-cluster/golang-app:latest"
     }
 ]

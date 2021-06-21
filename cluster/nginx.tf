@@ -18,6 +18,7 @@ resource "aws_ecs_service" "nginx-service" {
 
   network_configuration {
     subnets = var.subnet_ids
+    security_groups = [aws_security_group.nginx_sg.id]
   }
 }
 
@@ -44,4 +45,28 @@ resource "aws_ecs_task_definition" "efs-task" {
   #     }
   #   }
   # }
+}
+
+resource "aws_security_group" "nginx_sg" {
+  name   = "Nginx service sg"
+  vpc_id = var.vpc_id
+  tags   = local.tags
+}
+
+resource "aws_security_group_rule" "nginx_sg_ingress" {
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  cidr_blocks       = var.trusted_cidr_blocks
+  security_group_id = aws_security_group.nginx_sg.id
+  type              = "ingress"
+}
+
+resource "aws_security_group_rule" "nginx_sg_egress" {
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.nginx_sg.id
+  type              = "egress"
 }

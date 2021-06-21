@@ -14,6 +14,10 @@ variable "subnet_ids" {
   description = ""
 }
 
+variable "public_subnet" {
+  description = ""
+}
+
 variable "spot" {
   description = "Choose should we use spot instances or on-demand to poulate ECS cluster."
   type        = bool

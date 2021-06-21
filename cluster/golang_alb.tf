@@ -1,6 +1,6 @@
 resource "aws_alb" "golang-alb" {
   name            = "golang-load-balancer"
-  subnets         = var.subnet_ids
+  subnets         = var.public_subnet
   security_groups = [aws_security_group.aws-golang-alb.id]
   tags = {
     Name = "golang-app-alb"
@@ -21,8 +21,8 @@ resource "aws_security_group" "aws-golang-alb" {
 
   ingress {
     protocol    = "tcp"
-    from_port   = 3000
-    to_port     = 3000
+    from_port   = 80
+    to_port     = 80
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -75,7 +75,7 @@ resource "aws_alb_listener" "alb-https-listener" {
 
 resource "aws_lb_listener" "alb-http-listener" {
   load_balancer_arn = aws_alb.golang-alb.id
-  port              = 3000
+  port              = 80
   protocol          = "HTTP"
 
   default_action {

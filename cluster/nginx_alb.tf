@@ -96,7 +96,7 @@ data "aws_route53_zone" "hosted-zone" {
 
 resource "aws_route53_record" "nginx-alb-record" {
   zone_id = data.aws_route53_zone.hosted-zone.zone_id
-  name    = "web.stevejcliu.com"
+  name    = "stevejcliu.com"
   type    = "A"
 
   alias {

@@ -24,7 +24,7 @@ variable "instance_types" {
   description = "ECS node instance types. Maps of pairs like `type = weight`. Where weight gives the instance type a proportional weight to other instance types."
   type        = map(any)
   default = {
-    "t3a.small" = 2
+    "t3a.small" = 1
   }
 }
 

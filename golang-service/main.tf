@@ -50,7 +50,6 @@ resource "aws_ecs_task_definition" "golang-task" {
 resource "aws_security_group" "golang_sg" {
   name   = "golang service sg"
   vpc_id = var.vpc_id
-  tags   = local.tags
 }
 
 resource "aws_security_group_rule" "golang_sg_http_ingress" {

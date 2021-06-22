@@ -1,14 +1,14 @@
 resource "aws_ecs_service" "golang-service" {
   name            = "golang-service"
-  cluster         = aws_ecs_cluster.ecs-cluster.id
+  cluster         = var.cluster_id
   task_definition = aws_ecs_task_definition.golang-task.arn
   desired_count   = 1
 
-  capacity_provider_strategy {
-    base              = 1
-    capacity_provider = aws_ecs_capacity_provider.the-capacity-provider.name
-    weight            = 1
-  }
+  # capacity_provider_strategy {
+  #   base              = 1
+  #   capacity_provider = aws_ecs_capacity_provider.the-capacity-provider.name
+  #   weight            = 1
+  # }
 
   load_balancer {
     target_group_arn = aws_alb_target_group.golang_app.id
@@ -23,7 +23,7 @@ resource "aws_ecs_service" "golang-service" {
 }
 
 data "template_file" "golang_app" {
-  template = file("./cluster/golang.json")
+  template = file("./golang-service/golang.json")
 }
 
 resource "aws_ecs_task_definition" "golang-task" {

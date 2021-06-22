@@ -6,7 +6,7 @@ variable "create_vpc" {
 variable "vpc_name" {
 }
 
-variable "cidr" {
+variable "vpc_cidr" {
   description = "The CIDR block for the VPC."
 }
 

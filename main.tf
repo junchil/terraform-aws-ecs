@@ -1,6 +1,6 @@
 module "vpc" {
   source              = "./vpc"
-  cidr                = "10.0.0.0/16"
+  vpc_cidr            = "10.0.0.0/16"
   vpc_name            = var.vpc_name
   public_subnet_cidr  = ["10.0.204.0/22", "10.0.208.0/22", "10.0.212.0/22"]
   private_subnet_cidr = ["10.0.228.0/22", "10.0.232.0/22", "10.0.236.0/22"]
